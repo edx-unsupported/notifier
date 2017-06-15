@@ -3,6 +3,9 @@ import logging
 import os
 import platform
 
+# Change this
+SECRET_KEY = "bI7S2DOOdOLHu3pry1hr2glKlBvBRIB9Uz9CjjI69nOdFyyhsLww06y95z3caIoC0H6RzwLQQe0B9gE43QUM4hjBy6OHhpv1Fwil"
+
 DATABASES = {
     'default': {
         # Database backend defaults to 'sqlite3', but 'mysql' is also supported.
@@ -27,6 +30,26 @@ INSTALLED_APPS = (
 )
 
 SERVICE_NAME = 'notifier'
+
+# Template Settings
+SETTINGS_PATH = os.path.dirname(os.path.dirname(__file__))
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(SETTINGS_PATH, 'templates')],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
 
 # Misc. Notifier Formatting
 
