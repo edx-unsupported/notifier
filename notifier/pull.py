@@ -27,7 +27,7 @@ def _http_post(*a, **kw):
     try:
         logger.debug('POST %s %s', a[0], kw)
         response = requests.post(*a, **kw)
-    except requests.exceptions.ConnectionError, e:
+    except requests.exceptions.ConnectionError as e:
         _, msg, tb = sys.exc_info()
         raise CommentsServiceException, "comments service request failed: {}".format(msg), tb
     if response.status_code != 200:

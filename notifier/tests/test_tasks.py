@@ -80,7 +80,7 @@ class TasksTestCase(TestCase):
         data = json.load(
             open(join(dirname(__file__), 'cs_notifications.result.json')))
 
-        user_id, digest = self._process_cs_response_with_user_info(data).next()
+        user_id, digest = next(self._process_cs_response_with_user_info(data))
         user = usern(10)
         with patch('notifier.tasks.generate_digest_content', return_value=[(user_id, digest)]) as p:
 
