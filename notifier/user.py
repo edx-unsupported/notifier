@@ -33,7 +33,7 @@ def _http_get(*a, **kw):
         response = requests.get(*a, **kw)
     except requests.exceptions.ConnectionError as e:
         _, msg, tb = sys.exc_info()
-        raise UserServiceException("request failed: {}".format(msg), tb)
+        raise UserServiceException, "request failed: {}".format(msg), tb
     if response.status_code != 200:
         raise UserServiceException("HTTP Error {}: {}".format(
             response.status_code,
