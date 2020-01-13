@@ -3,10 +3,11 @@ Functions in support of generating formatted digest emails of forums activity.
 """
 import logging
 import sys
-
-from django.conf import settings
 import requests
 import six
+
+from django.conf import settings
+from edx_rest_api_client.client import get_oauth_access_token
 
 
 logger = logging.getLogger(__name__)
@@ -19,14 +20,26 @@ LANGUAGE_PREFERENCE_KEY = 'pref-lang'
 class UserServiceException(Exception):
     pass
 
+
+def get_access_token():
+    oauth_url = settings.LMS_URL_BASE + '/oauth2/access_token'
+    client_id = settings.CLIENT_ID
+    client_secret = settings.CLIENT_SECRET
+    token, expiration = get_oauth_access_token(oauth_url, client_id, client_secret, token_type='jwt')
+
+    return token
+
+
 def _headers():
-    return {'X-EDX-API-Key': settings.US_API_KEY}
+    return {'Authorization': 'JWT {jwt}'.format(jwt=get_access_token())}
+
 
 def _auth():
     auth = {}
     if settings.US_HTTP_AUTH_USER:
         auth['auth'] = (settings.US_HTTP_AUTH_USER, settings.US_HTTP_AUTH_PASS)
     return auth
+
 
 def _http_get(*a, **kw):
     try:
@@ -41,6 +54,7 @@ def _http_get(*a, **kw):
             response.reason
         ))
     return response
+
 
 def get_digest_subscribers():
     """

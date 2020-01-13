@@ -22,6 +22,7 @@ django-configurations==0.8
 django-coverage==1.2.4
 django-ses==0.8.3.1
 django==1.8.18
+edx-rest-api-client==1.9.2
 enum34==1.1.6             # via astroid
 futures==3.3.0            # via apscheduler
 idna==2.8                 # via requests
@@ -34,8 +35,9 @@ MySQL-python==1.2.5; python_version < '3.0'
 mysqlclient==1.4.2.post1; python_version >= '3.0'
 pbr==5.4.4                # via stevedore
 pep8==1.6.2
+pyjwt==1.7.1              # via edx-rest-api-client
 pylint==1.4.4
-pymongo==3.10.0
+pymongo==3.10.1
 python-dateutil==2.4.2
 python-slugify==1.2.6     # via transifex-client
 pytz==2016.10
@@ -43,11 +45,12 @@ redis==2.10.6
 requests==2.22.0
 singledispatch==3.4.0.3   # via astroid
 six==1.11.0
+slumber==0.7.1            # via edx-rest-api-client
 stevedore==1.31.0
-transifex-client==0.13.6
+transifex-client==0.13.7
 tzlocal==2.0.0            # via apscheduler
 unidecode==1.1.1          # via python-slugify
-urllib3==1.23             # via requests, transifex-client
+urllib3==1.25.7           # via requests, transifex-client
 wrapt==1.11.2             # via astroid
 
 # The following packages are considered to be unsafe in a requirements file:

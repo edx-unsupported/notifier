@@ -2,20 +2,22 @@
 """
 from django.test import TestCase
 from django.test.utils import override_settings
-from mock import patch
+from mock import patch, Mock
 
 from notifier.user import get_digest_subscribers, DIGEST_NOTIFICATION_PREFERENCE_KEY
 
 from .utils import make_mock_json_response
 
-TEST_API_KEY = 'ZXY123!@#$%'
+ACCESS_TOKEN = 'JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3OD'
+MOCKED_HEADERS = Mock()
+MOCKED_HEADERS.return_value = {'Authorization': ACCESS_TOKEN}
 
 
 # some shorthand to quickly generate fixture results
 mkresult = lambda n: {
     "id": n,
-    "email": "email%d" % n, 
-    "name": "name%d" % n, 
+    "email": "email%d" % n,
+    "name": "name%d" % n,
     "preferences": {
         DIGEST_NOTIFICATION_PREFERENCE_KEY: "pref%d" % n,
     },
@@ -24,16 +26,15 @@ mkresult = lambda n: {
 mkexpected = lambda d: dict([(key, val) for (key, val) in d.items() if key != "url"])
 
 
-@override_settings(US_API_KEY=TEST_API_KEY)
+@patch('notifier.user._headers', new=MOCKED_HEADERS)
 class UserTestCase(TestCase):
     """
     """
 
     def setUp(self):
         self.expected_api_url = "test_server_url/notifier_api/v1/users/"
-        self.expected_params = {"page_size":3, "page":1}
-        self.expected_headers = {'X-EDX-API-Key': TEST_API_KEY}
-
+        self.expected_params = {"page_size": 3, "page": 1}
+        self.expected_headers = {'Authorization': ACCESS_TOKEN}
 
     @override_settings(US_URL_BASE="test_server_url", US_RESULT_PAGE_SIZE=3)
     def test_get_digest_subscribers_empty(self):
@@ -56,7 +57,6 @@ class UserTestCase(TestCase):
                     headers=self.expected_headers)
             self.assertEqual(0, len(res))
 
-
     @override_settings(US_URL_BASE="test_server_url", US_RESULT_PAGE_SIZE=3)
     def test_get_digest_subscribers_single_page(self):
         """
@@ -77,10 +77,9 @@ class UserTestCase(TestCase):
                     params=self.expected_params,
                     headers=self.expected_headers)
             self.assertEqual([
-                mkexpected(mkresult(1)), 
-                mkexpected(mkresult(2)), 
+                mkexpected(mkresult(1)),
+                mkexpected(mkresult(2)),
                 mkexpected(mkresult(3))], res)
-
 
     @override_settings(US_URL_BASE="test_server_url", US_RESULT_PAGE_SIZE=3)
     def test_get_digest_subscribers_multi_page(self):
@@ -102,6 +101,7 @@ class UserTestCase(TestCase):
         }
 
         expected_pages = [expected_multi_p1, expected_multi_p2]
+
         def side_effect(*a, **kw):
             return expected_pages.pop(0)
 
@@ -135,8 +135,8 @@ class UserTestCase(TestCase):
             self.assertEqual(1, p.call_count)
             self.assertRaises(StopIteration, g.next)
 
-
-    @override_settings(US_URL_BASE="test_server_url", US_RESULT_PAGE_SIZE=3, US_HTTP_AUTH_USER='someuser', US_HTTP_AUTH_PASS='somepass')
+    @override_settings(US_URL_BASE="test_server_url", US_RESULT_PAGE_SIZE=3,
+                       US_HTTP_AUTH_USER='someuser', US_HTTP_AUTH_PASS='somepass')
     def test_get_digest_subscribers_basic_auth(self):
         """
         """
@@ -156,8 +156,8 @@ class UserTestCase(TestCase):
                     headers=self.expected_headers,
                     auth=('someuser', 'somepass'))
             self.assertEqual([
-                mkexpected(mkresult(1)), 
-                mkexpected(mkresult(2)), 
+                mkexpected(mkresult(1)),
+                mkexpected(mkresult(2)),
                 mkexpected(mkresult(3))], res)
 
 

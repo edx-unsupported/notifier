@@ -50,7 +50,7 @@ EMAIL_BACKEND = {
         'ses': 'django_ses.SESBackend',
         'smtp': 'django.core.mail.backends.smtp.EmailBackend'
         }[os.getenv('EMAIL_BACKEND', 'console')]
-# The ideal setting for this is 1 / number_of_celery_workers * headroom, 
+# The ideal setting for this is 1 / number_of_celery_workers * headroom,
 # where headroom is a multiplier to underrun the send rate limit (e.g.
 # 0.9 to keep 10% behind the per-second rate limit at any given moment).
 AWS_SES_AUTO_THROTTLE = 0.9
@@ -65,14 +65,14 @@ EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
 EMAIL_REWRITE_RECIPIENT = os.getenv('EMAIL_REWRITE_RECIPIENT')
 
 # LMS links, images, etc
-LMS_URL_BASE = os.getenv('LMS_URL_BASE', 'http://localhost:8000')
+LMS_URL_BASE = os.getenv('LMS_URL_BASE', 'http://localhost:18000')
 
 # Comments Service Endpoint, for digest pulls
 CS_URL_BASE = os.getenv('CS_URL_BASE', 'http://localhost:4567')
 CS_API_KEY = os.getenv('CS_API_KEY', 'PUT_YOUR_API_KEY_HERE')
 
 # User Service Endpoint, provides subscriber lists and notification-related user data
-US_URL_BASE = os.getenv('US_URL_BASE', 'http://localhost:8000')
+US_URL_BASE = os.getenv('US_URL_BASE', 'http://localhost:18000')
 US_API_KEY = os.getenv('US_API_KEY', 'PUT_YOUR_API_KEY_HERE')
 US_HTTP_AUTH_USER = os.getenv('US_HTTP_AUTH_USER', '')
 US_HTTP_AUTH_PASS = os.getenv('US_HTTP_AUTH_PASS', '')
@@ -89,7 +89,7 @@ BROKER_URL = os.getenv('BROKER_URL', 'django://')
 
 # limit the frequency at which the forum digest celery task may be run.
 FORUM_DIGEST_TASK_RATE_LIMIT = os.getenv('FORUM_DIGEST_TASK_RATE_LIMIT', '6/m')
-# limit the size of user batches (cs service pulls / emails sent) per-task 
+# limit the size of user batches (cs service pulls / emails sent) per-task
 FORUM_DIGEST_TASK_BATCH_SIZE = int(os.getenv('FORUM_DIGEST_TASK_BATCH_SIZE', 5))
 # limit the number of times an individual task will be retried
 FORUM_DIGEST_TASK_MAX_RETRIES = 2
@@ -115,8 +115,8 @@ LOGGING = {
                        "[%(name)s][env:{logging_env}] %(levelname)s "
                        "[{hostname} %(process)d] [%(filename)s:%(lineno)d] "
                        "- %(message)s").format(
-                           service_variant=SERVICE_NAME, 
-                           logging_env=NOTIFIER_ENV.lower(), 
+                           service_variant=SERVICE_NAME,
+                           logging_env=NOTIFIER_ENV.lower(),
                            hostname=platform.node().split(".")[0])
         }
     },
@@ -163,11 +163,11 @@ if LOG_FILE:
     LOGGING['loggers']['']['handlers'].append('file')
 
 TIME_ZONE = 'UTC'  # what task workers see
-CELERY_TIMEZONE = 'UTC'  # what the main celery process sees 
+CELERY_TIMEZONE = 'UTC'  # what the main celery process sees
 
 # set up schedule for forum digest job
 if FORUM_DIGEST_TASK_INTERVAL==1440:
-    # in the production case, make the 24 hour cycle happen at a 
+    # in the production case, make the 24 hour cycle happen at a
     # predetermined time of day (midnight UTC).
     DIGEST_CRON_SCHEDULE = {'hour': 0}
 else:
@@ -219,3 +219,5 @@ LOGO_IMAGE_URL = os.getenv('LOGO_IMAGE_URL', "{}/static/images/edx-theme/edx-log
 DEAD_MANS_SNITCH_URL = os.getenv('DEAD_MANS_SNITCH_URL', '')
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'secret_key')
+CLIENT_ID = os.getenv('CLIENT_ID', 'client_id')
+CLIENT_SECRET = os.getenv('CLIENT_SECRET', 'client_secret')
