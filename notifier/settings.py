@@ -19,6 +19,13 @@ DATABASES = {
     }
 }
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
+}
+
 INSTALLED_APPS = (
     'kombu.transport.django',
     'django_ses',

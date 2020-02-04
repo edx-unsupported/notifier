@@ -5,8 +5,10 @@ import logging
 import sys
 import requests
 import six
+import datetime
 
 from django.conf import settings
+from django.core.cache import cache
 from edx_rest_api_client.client import get_oauth_access_token
 
 
@@ -15,6 +17,7 @@ logger = logging.getLogger(__name__)
 
 DIGEST_NOTIFICATION_PREFERENCE_KEY = 'notification_pref'
 LANGUAGE_PREFERENCE_KEY = 'pref-lang'
+AUTH_TOKEN_CACHE_KEY = 'access_token_for_notifier'
 
 
 class UserServiceException(Exception):
@@ -22,10 +25,15 @@ class UserServiceException(Exception):
 
 
 def get_access_token():
-    oauth_url = settings.LMS_URL_BASE + '/oauth2/access_token'
-    client_id = settings.CLIENT_ID
-    client_secret = settings.CLIENT_SECRET
-    token, expiration = get_oauth_access_token(oauth_url, client_id, client_secret, token_type='jwt')
+    token = cache.get(AUTH_TOKEN_CACHE_KEY)
+    if token is None:
+        oauth_url = settings.LMS_URL_BASE + '/oauth2/access_token'
+        client_id = settings.CLIENT_ID
+        client_secret = settings.CLIENT_SECRET
+        token, expiration = get_oauth_access_token(oauth_url, client_id, client_secret, token_type='jwt')
+        expires = (expiration - datetime.datetime.utcnow()).seconds
+
+        cache.set(AUTH_TOKEN_CACHE_KEY, token, expires)
 
     return token
 

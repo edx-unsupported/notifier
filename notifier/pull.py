@@ -10,6 +10,7 @@ import requests
 import six
 
 from notifier.digest import Digest, DigestCourse, DigestThread, DigestItem
+from notifier.user import get_access_token
 
 logger = logging.getLogger(__name__)
 
@@ -154,7 +155,7 @@ def generate_digest_content(users_by_id, from_dt, to_dt):
     user_ids_string = ','.join(map(str, sorted(users_by_id.keys())))
     dt_format = '%Y-%m-%d %H:%M:%S%z'
     headers = {
-        'X-Edx-Api-Key': settings.CS_API_KEY,
+        'AUTHORIZATION': 'JWT {jwt}'.format(jwt=get_access_token()),
     }
     data = {
         'user_ids': user_ids_string,
