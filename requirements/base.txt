@@ -21,7 +21,7 @@ django-celery==3.1.17
 django-configurations==0.8
 django-coverage==1.2.4
 django-ses==0.8.3.1
-django==1.8.18
+django==1.11.28
 enum34==1.1.6             # via astroid
 futures==3.3.0            # via apscheduler
 idna==2.8                 # via requests
@@ -30,8 +30,7 @@ lazy-object-proxy==1.4.3  # via astroid
 logilab-astng==0.24.3
 logilab-common==1.1.0
 mock==1.0.1
-MySQL-python==1.2.5; python_version < '3.0'
-mysqlclient==1.4.2.post1; python_version >= '3.0'
+mysql-python==1.2.5 ; python_version < "3.0"
 pbr==5.4.4                # via stevedore
 pep8==1.6.2
 pylint==1.4.4
@@ -51,4 +50,4 @@ urllib3==1.23             # via requests, transifex-client
 wrapt==1.11.2             # via astroid
 
 # The following packages are considered to be unsafe in a requirements file:
-# setuptools==44.0.0        # via logilab-common
+# setuptools
