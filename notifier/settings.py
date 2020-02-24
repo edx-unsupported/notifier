@@ -226,5 +226,5 @@ LOGO_IMAGE_URL = os.getenv('LOGO_IMAGE_URL', "{}/static/images/edx-theme/edx-log
 DEAD_MANS_SNITCH_URL = os.getenv('DEAD_MANS_SNITCH_URL', '')
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'secret_key')
-CLIENT_ID = os.getenv('CLIENT_ID', 'client_id')
-CLIENT_SECRET = os.getenv('CLIENT_SECRET', 'client_secret')
+BACKEND_SERVICE_EDX_OAUTH2_KEY = os.getenv('BACKEND_SERVICE_EDX_OAUTH2_KEY', 'client_id')
+BACKEND_SERVICE_EDX_OAUTH2_SECRET = os.getenv('BACKEND_SERVICE_EDX_OAUTH2_SECRET', 'client_secret')

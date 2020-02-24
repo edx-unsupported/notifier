@@ -27,10 +27,9 @@ class UserServiceException(Exception):
 def get_access_token():
     token = cache.get(AUTH_TOKEN_CACHE_KEY)
     if token is None:
-        oauth_url = settings.LMS_URL_BASE + '/oauth2/access_token'
-        client_id = settings.CLIENT_ID
-        client_secret = settings.CLIENT_SECRET
-        token, expiration = get_oauth_access_token(oauth_url, client_id, client_secret, token_type='jwt')
+        oauth_url = '{root}/access_token'.format(root=settings.LMS_URL_BASE)
+        token, expiration = get_oauth_access_token(oauth_url, settings.BACKEND_SERVICE_EDX_OAUTH2_KEY,
+                                                   settings.BACKEND_SERVICE_EDX_OAUTH2_SECRET, token_type='jwt')
         expires = (expiration - datetime.datetime.utcnow()).seconds
 
         cache.set(AUTH_TOKEN_CACHE_KEY, token, expires)
@@ -39,7 +38,10 @@ def get_access_token():
 
 
 def _headers():
-    return {'Authorization': 'JWT {jwt}'.format(jwt=get_access_token())}
+    return {
+        'X-EDX-API-Key': settings.US_API_KEY,
+        'Authorization': 'JWT {jwt}'.format(jwt=get_access_token()),
+    }
 
 
 def _auth():
